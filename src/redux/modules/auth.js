@@ -12,8 +12,8 @@ const initialState = {
   loaded: false
 };
 
-export default function reducer(state = initialState, action = {}) {
-  switch (action.type) {
+export default function reducer( state = initialState, action = {} ) {
+  switch ( action.type ) {
     case LOAD:
       return {
         ...state,
@@ -73,31 +73,44 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function isLoaded(globalState) {
+export function isLoaded( globalState ) {
   return globalState.auth && globalState.auth.loaded;
 }
 
 export function load() {
   return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.get('/loadAuth')
+    types: [ LOAD, LOAD_SUCCESS, LOAD_FAIL ],
+    promise: ( client ) => client.get( '/auth/load' )
   };
 }
 
-export function login(name) {
+export function register( email, password ) {
   return {
-    types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-    promise: (client) => client.post('/login', {
+    types: [ LOGIN, LOGIN_SUCCESS, LOGIN_FAIL ],
+    promise: ( client ) => client.post( '/auth/register', {
       data: {
-        name: name
+        email,
+        password
       }
-    })
+    } )
+  };
+}
+
+export function login( email, password ) {
+  return {
+    types: [ LOGIN, LOGIN_SUCCESS, LOGIN_FAIL ],
+    promise: ( client ) => client.post( '/auth/login', {
+      data: {
+        email,
+        password
+      }
+    } )
   };
 }
 
 export function logout() {
   return {
-    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: (client) => client.get('/logout')
+    types: [ LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL ],
+    promise: ( client ) => client.get( '/auth/logout' )
   };
 }

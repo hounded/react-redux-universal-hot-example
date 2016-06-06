@@ -13,23 +13,22 @@ import { push } from 'react-router-redux';
 import config from '../../config';
 import { asyncConnect } from 'redux-async-connect';
 
-@asyncConnect([{
-  promise: ({store: {dispatch, getState}}) => {
+@asyncConnect( [ {
+  promise: ( { store: { dispatch, getState } } ) => {
     const promises = [];
 
-    if (!isInfoLoaded(getState())) {
-      promises.push(dispatch(loadInfo()));
+    if ( !isAuthLoaded( getState() ) ) {
+      promises.push( dispatch( loadAuth() ) );
     }
-    if (!isAuthLoaded(getState())) {
-      promises.push(dispatch(loadAuth()));
+    if ( !isInfoLoaded( getState() ) ) {
+      promises.push( dispatch( loadInfo() ) );
     }
-
-    return Promise.all(promises);
+    return Promise.all( promises );
   }
-}])
+} ] )
 @connect(
-  state => ({user: state.auth.user}),
-  {logout, pushState: push})
+  state => ({ user: state.auth.user }),
+  { logout, pushState: push } )
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
@@ -42,24 +41,24 @@ export default class App extends Component {
     store: PropTypes.object.isRequired
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.user && nextProps.user) {
+  componentWillReceiveProps( nextProps ) {
+    if ( !this.props.user && nextProps.user ) {
       // login
-      this.props.pushState('/loginSuccess');
-    } else if (this.props.user && !nextProps.user) {
+      this.props.pushState( '/loginSuccess' );
+    } else if ( this.props.user && !nextProps.user ) {
       // logout
-      this.props.pushState('/');
+      this.props.pushState( '/' );
     }
   }
 
-  handleLogout = (event) => {
+  handleLogout = ( event ) => {
     event.preventDefault();
     this.props.logout();
   };
 
   render() {
-    const {user} = this.props;
-    const styles = require('./App.scss');
+    const { user } = this.props;
+    const styles = require( './App.scss' );
 
     return (
       <div className={styles.app}>
@@ -95,17 +94,22 @@ export default class App extends Component {
               <LinkContainer to="/login">
                 <NavItem eventKey={5}>Login</NavItem>
               </LinkContainer>}
+              {!user &&
+              <LinkContainer to="/register">
+                <NavItem eventKey={6}>Register</NavItem>
+              </LinkContainer>}
               {user &&
               <LinkContainer to="/logout">
-                <NavItem eventKey={6} className="logout-link" onClick={this.handleLogout}>
+                <NavItem eventKey={7} className="logout-link" onClick={this.handleLogout}>
                   Logout
                 </NavItem>
               </LinkContainer>}
             </Nav>
             {user &&
-            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}
+            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.email}</strong>.</p>}
             <Nav navbar pullRight>
-              <NavItem eventKey={1} target="_blank" title="View on Github" href="https://github.com/erikras/react-redux-universal-hot-example">
+              <NavItem eventKey={1} target="_blank" title="View on Github"
+                       href="https://github.com/erikras/react-redux-universal-hot-example">
                 <i className="fa fa-github"/>
               </NavItem>
             </Nav>
