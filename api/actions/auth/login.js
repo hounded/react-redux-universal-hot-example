@@ -1,6 +1,6 @@
-import config from '../../../src/config';
-import jwt from 'jsonwebtoken';
-import { User } from '../../database';
+import config from "../../../src/config";
+import jwt from "jsonwebtoken";
+import { User } from "../../database";
 
 export default function login( req ) {
   return new Promise( ( resolve, reject ) => {
@@ -8,7 +8,6 @@ export default function login( req ) {
       email: req.body.email
     }, ( err, user ) => {
       if ( err ) reject( err );
-
       if ( !user ) {
         reject( 'Authentication failed. User not found.' );
       } else {
